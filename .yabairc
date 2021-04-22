@@ -44,6 +44,7 @@ yabai -m config left_padding                 10
 yabai -m config right_padding                10
 yabai -m config window_gap                   5
 
+yabai -m config window_shadow 				 off
 # make stickies are not tiled
 yabai -m rule --add app=Stickies manage=off
 yabai -m rule --add app=Karabiner-Elements manage=off
