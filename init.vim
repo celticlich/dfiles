@@ -24,8 +24,10 @@ Plug 'whatyouhide/vim-gotham'
 Plug 'jiangmiao/auto-pairs'
 Plug 'arcticicestudio/nord-vim'
 Plug 'dbeniamine/cheat.sh-vim'
-Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'liuchengxu/vim-which-key'
 call plug#end()
+
+source $HOME/.config/nvim/keys/which-key.vim
 
 nnoremap <C-S-tab> 	:tabprevious<CR>
 nnoremap <C-tab> 	:tabnext<CR>
