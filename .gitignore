@@ -90,3 +90,6 @@ powershell
 scripts
 .config
 .vim_runtime
+install
+install.conf.yaml
+stuff-for-dotbot.txt
