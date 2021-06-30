@@ -22,9 +22,11 @@ export UNIFI_HOST="https://192.168.1.9:8443"
 export BROWSER='/Applications/Firefox.app'
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-export PATH=$HOME/bin:/usr/local/bin:/usr/local/Cellar:/home/heretic/Library/Python/3.7/bin:/home/heretic/.cargo/bin:/home/heretic/.android-sdk-macosx/platform-tools/:$PATH
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/Cellar:/home/heretic/Library/Python/3.7/bin:/home/heretic/.cargo/bin:/home/heretic/.android-sdk-macosx/platform-tools/:$PATH
 elif [[ "$OSTYPE" == "darwin"* ]]; then 
-export PATH=$HOME/bin:/usr/local/bin:/usr/local/Cellar:/Users/heretic/Library/Python/3.7/bin:/Users/heretic/.cargo/bin:/Users/heretic/.android-sdk-macosx/platform-tools/:$PATH
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+export PATH=$HOME/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/Cellar:/Users/heretic/Library/Python/3.7/bin:/Users/heretic/.cargo/bin:/Users/heretic/.android-sdk-macosx/platform-tools/:$PATH
 fi
 
 export DISABLE_AUTO_TITLE='true'
@@ -163,17 +165,22 @@ FZF_TMUX_OPTS='-p 65%'
 # Source
 # ##################################################################
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-# [ ! -f $HOME/git/fzf-tab-completion/zsh/fzf-zsh-completion.sh ] || source $HOME/git/fzf-tab-completion/zsh/fzf-zsh-completion.sh 
 [ -f $HOME/.zsh_aliases ] && source $HOME/.zsh_aliases
 [ -f $HOME/.zsh_functions ] && source $HOME/.zsh_functions
 [ -f $HOME/.git_functions ] && source $HOME/.git_functions
 [ -f $HOME/.mymacros.bash ] && source $HOME/.mymacros.bash
 [ -f $HOME/git/forgit/forgit.plugin.zsh ] && source $HOME/git/forgit/forgit.plugin.zsh
-[ -f /usr/local/share/zsh-syntax-highlightint/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-eval "$(zoxide init zsh)"
+if [[ -f "/usr/local/bin/zoxide" ]]; then
+    eval "$(zoxide init zsh)"
+    echo "zoxide loaded"
+  else
+    echo "zoxide does not exist"
+fi
+
 
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
