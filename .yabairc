@@ -36,9 +36,6 @@ yabai -m config mouse_action2                resize
 yabai -m config external_bar                 all:0:20
 yabai -m config layout                       bsp
 yabai -m config top_padding                  35 
-yabai -m config bottom_padding               0
-yabai -m config layout                       bsp
-yabai -m config top_padding                  35
 yabai -m config bottom_padding               2
 yabai -m config left_padding                 10
 yabai -m config right_padding                10
@@ -52,9 +49,39 @@ yabai -m rule --add app=Alfred manage=off
 yabai -m rule --add app="System Preferences" manage=off
 yabai -m rule --add app="Authy" manage=off
 yabai -m rule --add app="Pi-hole Remote" manage=on
-yabai -m rule --add app="Discord" space=2
-yabai -m rule --add app="Spark" space=3
-yabai -m rule --add app="Firefox" space=1
+# rules for specific window space management 
+yabai -m rule --add app="Discord" space=1
+yabai -m rule --add app="Spotify" space=2
+yabai -m rule --add app="Spark" space=2
+yabai -m rule --add app="Pi-hole Remote" space=2
+yabai -m rule --add app="Firefox" space=3
+
+# Refresh spaces widget on space change
+yabai -m signal --add event=space_changed action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-spaces-jsx\"'"
+# Refresh spaces widget on display focus change
+yabai -m signal --add event=display_changed action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-spaces-jsx\"'"
+# Refresh spaces widget on window resize
+yabai -m signal --add event=window_resized action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-spaces-jsx\"'"
+# Refresh process widget on space change
+yabai -m signal --add event=space_changed action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-process-jsx\"'"
+
+# Refresh process widget on when focused application changes
+yabai -m signal --add event=window_focused action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-process-jsx\"'"
+# Refresh spaces widget on when focused application changes
+yabai -m signal --add event=window_focused action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-spaces-jsx\"'"
+
+# Refresh process widget on when focused application changes
+yabai -m signal --add event=application_front_switched action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-process-jsx\"'"
+# Refresh spaces widget on when focused application changes
+yabai -m signal --add event=application_front_switched action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-spaces-jsx\"'"
+
+# Refresh process widget on when an application window is closed
+yabai -m signal --add event=window_destroyed action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-process-jsx\"'"
+# Refresh spaces widget on when an application window is closed
+yabai -m signal --add event=window_destroyed action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-spaces-jsx\"'"
+
+# Refresh process widget when current window title changes
+yabai -m signal --add event=window_title_changed action="osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-process-jsx\"'"
 
 
 echo "yabai configuration loaded.."

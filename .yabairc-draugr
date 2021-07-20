@@ -50,7 +50,11 @@ yabai -m rule --add app=Stickies manage=off
 yabai -m rule --add app=Karabiner-Elements manage=off
 yabai -m rule --add app=Alfred manage=off
 yabai -m rule --add app="System Preferences" manage=off
+yabai -m rule --add app="OBS" manage=off
 yabai -m rule --add app="Authy" manage=off
+yabai -m rule --add app="Barrier" manage=off
+yabai -m rule --add app="1Password" manage=off
+yabai -m rule --add app="OBS" manage=off
 yabai -m rule --add app="Pi-hole Remote" manage=on
 yabai -m rule --add app="Discord" space=1
 yabai -m rule --add app="Spotify" space=2
