@@ -22,7 +22,7 @@ alias softwareupdate='sudo softwareupdate'
 alias wireless='networksetup -setairportpower en1 '$1''
 alias shr='netstat -nr'
 alias extip='wget ipinfo.io/ip -qO -'
-alias vi='$HOME/.local/share/nvim-osx64/bin/nvim'
+alias vi="$HOME/bin/nvim-osx64/bin/nvim"
 alias psaux='ps aux | ccze -A -o nolookups'
 alias brewup='brew update && brew upgrade'
 alias pscpu='ps aux | sort -nr -k 3'
@@ -37,8 +37,6 @@ alias dcs='docker container start $1'
 alias dcst='docker container stop $1'
 alias b='~/scripts/b.rb'
 alias mps='rm -rf ~/.config/mps-youtube/cache_py_3.9.1 && mpsyt'
-alias jira='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --proxy-server="socks5://127.0.0.1:9000" --host-resolver-rules="MAP * ~NOTFOUND, EXCLUDE 127.0.0.1" &'
-alias workpc='ssh usrpvp@fleming.workpc.tds.net'
 
 
 # #####################################################################
