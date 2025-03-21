@@ -4,70 +4,20 @@
 # ##################################################################
 # Functions
 # ##################################################################
+# ##################################################################
+# Ansible
+# ##################################################################
 
 # ##################################################################
-# Docker Functions
-# ##################################################################
-dkclean() {
-		  sudo docker rm $(docker ps --all -q -f status=exited)
-		    sudo docker volume rm $(docker volume ls -qf dangling=true)
-			
-}
-
-dkln() {
-  sudo docker logs -f `docker ps | grep $1 | awk '{print $1}'`
-}
-
-dktop() {
-  sudo docker stats --format "table {{.Container}}\t{{.Name}}\t{{.CPUPerc}}  {{.MemPerc}}\t{{.NetIO}}\t{{.BlockIO}}"
-}
-
-dkstats() {
-  if [ $# -eq 0 ]
-    then sudo docker stats --no-stream;
-    else sudo docker stats --no-stream | grep $1;
+# 
+## find-in-file - usage: fif <SEARCH_TERM>
+fif() {
+  if [ ! "$#" -gt 0 ]; then
+    echo "Need a string to search for!";
+    return 1;
   fi
-}
-
-
-logs() { 
-    docker container logs $1
-}
-
-unifi_client () {#unifi client list
-    export DOCKER_HOST=tcp://192.168.1.9:2375
-    docker run -e UNIFI_HOST=$UNIFI_HOST -e UNIFI_USERNAME=unicli -e UNIFI_PASSWORD=unicli --rm apognu/unicli:latest clients list
-}
-
-unifi_ports () {#unifi port list
-    export DOCKER_HOST=tcp://192.168.1.9:2375
-    docker run -e UNIFI_HOST=$UNIFI_HOST -e UNIFI_USERNAME=unicli -e UNIFI_PASSWORD=unicli --rm apognu/unicli:latest clients list
-}
-# ##################################################################
-# Container updates
-# ##################################################################
-
-plex-update() { # bring down plex container and pull new image
-cd /opt/docker
-docker-compose down;
-docker-compose pull;
-docker-compose up -d
-}
-
-unifi-update() { # bring down unifi container and pull new image
-cd /opt/docker/unifi
-docker-compose down;
-docker-compose pull;
-docker-compose up -d
-}
-
-media-update() { # bring down media-stack container and pull new image
-cd /opt/docker/
-docker-compose down;
-docker-compose pull;
-docker-compose up -d
-}
-
+  rg --files-with-matches --no-messages "$1" | fzf $FZF_PREVIEW_WINDOW --preview "rg --ignore-case --pretty --context 10 '$1' {}"
+} ##################################################################
 testcron() { # test crontab entries for errors
  crontab -l | grep -v '^#' | cut -f 6- -d ' ' | while read CMD; do eval $CMD; done
 }
@@ -83,45 +33,50 @@ get_command() {  # Functionalise 'command -v' to allow 'if get_command [command]
 		command -v "${1}" &>/dev/null; 
 }
 
-printline() { # A function to print a specific line from a file
+printline() {
   # If $1 is empty, print a usage message
-  if [[ -z "${1}" ]]; then
-    printf '%s\n' "Usage:  printline n [file]" ""
-    printf '\t%s\n' "Print the Nth line of FILE." "" \
-      "With no FILE or when FILE is -, read standard input instead."
-    return 0
-  fi
-
-  # Check that $1 is a number, if it isn't print an error message
-  # If it is, blindly convert it to base10 to remove any leading zeroes
-  case $1 in
-    (''|*[!0-9]*) printf '%s\n' "[ERROR] printline: '${1}' does not appear to be a number." "" \
-                    "Run 'printline' with no arguments for usage.";
-                  return 1 ;;
-    (*)           local lineNo="$((10#$1))" ;;
-  esac
-
-  # Next, if $2 is set, check that we can actually read it
-  if [[ -n "${2}" ]]; then
-    if [[ ! -r "${2}" ]]; then
-      printf '%s\n' "[ERROR] printline: '$2' does not appear to exist or I can't read it." "" \
-        "Run 'printline' with no arguments for usage."
-      return 1
-    else
-      local file="${2}"
-    fi
-  fi
-
-  # Finally after all that testing is done, we throw in a cursory test for 'sed'
-  if is_command sed; then
-    sed -ne "${lineNo}{p;q;}" -e "\$s/.*/[ERROR] printline: End of stream reached./" -e '$ w /dev/stderr' "${file:-/dev/stdin}"
-  # Otherwise we print a message that 'sed' isn't available
-  else
-    printf '%s\n' "[ERROR] printline: This function depends on 'sed' which was not found."
+  if [[ -z $1 ]]; then
+    printf "%s\n" "printline"
+    printf "\t%s\n" "This function prints a specified line from a file" \
+      "Usage: 'printline line-number file-name'"
     return 1
   fi
-}
 
+  # Check that $1 is a number
+  case $1 in
+    ''|*[!0-9]*)  printf "%s\n" "[ERROR] printline: '$1' does not appear to be a number." \
+                    "Usage: printline line-number file-name";
+                  return 1 ;;
+    *)            local lineNo="$1" ;;
+  esac
+  
+  # Next, check that $2 is a file that exists
+  if [[ ! -f "$2" ]]; then
+    printf "%s\n" "[ERROR] printline: '$2' does not appear to exist or I can't read it." \
+      "Usage: printline line-number file-name"
+    return 1
+  else
+    local file="$2"
+  fi
+
+  # Desired line must be less than the number of lines in the file
+  local fileLength
+  fileLength=$(grep -c . "${file}")
+  if [[ "${lineNo}" -gt "${fileLength}" ]]; then
+    printf "%s\n" "[ERROR] printline: '${file}' is ${fileLength} lines long." \
+      "You want line number '${lineNo}'.  Do you see the problem here?"
+    return 1
+  fi
+
+  # Finally after all that testing is done...
+  # We try for 'sed' first as it's the fastest way to do this on massive files
+  if command -v sed &>/dev/null; then
+    sed -n "${lineNo}{p;q;}" < "${file}"
+  # Otherwise we try a POSIX-esque use of 'head | tail'
+  else
+    head -n "${lineNo}" "${file}" | tail -n 1
+  fi
+}
 fuzzpass() { # fuzzy password searching
     local arg
 	arg=$1
@@ -150,11 +105,6 @@ tm () { # switch between tmux sessions or create new if not
 		return
 	fi
 	session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0)  && tmux $change -t "$session" || echo "No sessions found."
-}
-
-rtvb() { #declare Firefox as browser just for rtv and launch rtv
-		export BROWSER="/Applications/Firefox.app"
-		rtv --theme solarized-dark
 }
 
 tkillpane () { #kill tmux panes by number
@@ -319,4 +269,41 @@ uninstall-cask() {
             brew cask home $token
         fi
     fi
+}
+four-line-search() {
+  grep -Rnw . -e "$1" 2>/dev/null -A4 | more
+}
+
+new-ticket() {
+  # Prompt the user for a JIRA ticket number
+  read -r "ticketnumber?Enter JIRA ticket number: "
+
+  # Error if no ticket number is provided
+  if [ -z "$ticketnumber" ]; then
+    echo "[ERROR] No JIRA ticket number provided."
+    return 1
+  fi
+
+  # Define the target directory
+  target_dir="/Users/celticlich/Work/tylertech/$ticketnumber"
+
+  # Check if the directory already exists
+  if [ -d "$target_dir" ]; then
+    echo "[ERROR] Directory for ticket $ticketnumber already exists at: $target_dir"
+    return 1
+  fi
+
+  # Create the directory since it doesn't exist
+  mkdir -p "$target_dir"
+
+  # Create a notes file in the new directory
+  notes_file="$target_dir/$ticketnumber.txt"
+  if [ ! -f "$notes_file" ]; then
+    touch "$notes_file"
+    echo "Notes for $ticketnumber" > "$notes_file"
+    echo "Created on $(date)" >> "$notes_file"
+    echo >> "$notes_file"
+  fi
+
+  echo "Directory and notes file successfully created at: $target_dir"
 }
