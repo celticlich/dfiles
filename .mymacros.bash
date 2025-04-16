@@ -16,17 +16,14 @@ function addmac() {
 }
 
 fzfcmdmacro() {
-  [ ${FZF_TMUX:-1} -eq 1 ] && echo "fzf-tmux -p --reverse" || echo "fzf"
-  # [ ${FZF_TMUX:-1} -eq 1 ] && echo "fzf-tmux -d${FZF_TMUX_HEIGHT:-20%} --reverse" || echo "fzf"
+  [ ${FZF_TMUX:-1} -eq 1 ] && echo 'fzf-tmux -p --reverse' || echo "fzf"
 }
 
 function mac() {
-  # local jumpline=$(ls ${MACROS_DIR} | awk '{print $1}' | xargs -I {} bash -c "echo -n '{} ' ; head -1 ${MACROS_DIR}/{}" | column -t -s "#" | awk '{ print $1 }' | $(fzfcmdmacro) --bind=ctrl-y:accept --tac)
-  local jumpline=$(ls ${MACROS_DIR} | awk '{print $1}' | xargs -I {} bash -c "echo -n '{} ' ; head -1 ${MACROS_DIR}/{}" | column -t -s "#" | $(fzfcmdmacro) --bind=ctrl-y:accept --tac)
+  local jumpline=$(ls ${MACROS_DIR} | awk '{print $1}' | xargs -I {} /bin/bash -c "echo -n '{} ' ; head -1 ${MACROS_DIR}/{}" | column -t -s "#" | $(fzfcmdmacro))
   if [[ -n ${jumpline} ]]; then
 		  outline=$(echo "$jumpline" | awk '{ print $1 }')
     /bin/bash ${MACROS_DIR}/$outline
-    # /bin/bash ${MACROS_DIR}/$jumpline
   fi
 }
 
