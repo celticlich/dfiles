@@ -27,4 +27,15 @@ alias busy='cat /dev/urandom | hexdump -C | grep "ca fe"'
 alias b='~/scripts/b.rb'
 alias mps='rm -rf ~/.config/mps-youtube/cache_py_3.9.1 && mpsyt'
 alias randpw="( export LC_ALL=C; tr -dc _A-Z-a-z-0-9 < /dev/urandom | head -c 25 );echo"
+
+###################################################################
+#
+# 20250429
+###################################################################
+#
 alias fixyabai='echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa"'
+alias workbox='ssh workbox'
+alias yggdrasil='ssh yggdrasil'
+alias fimbulwinter='ssh fimbulwinter'
+alias draugr='ssh draugr'
+alias methuselah='ssh -t pheron@methuselah "/usr/local/bin/zsh;"'
