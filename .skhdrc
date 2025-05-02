@@ -3,6 +3,7 @@ cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 
 # resize window
 ctrl + cmd - c : ~/bin/resize.sh
+ctrl + alt - c : ~/bin/restore.sh
 
 # focus window
 alt - h : yabai -m window --focus west
