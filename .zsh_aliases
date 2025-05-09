@@ -40,4 +40,7 @@ alias fimbulwinter='ssh fimbulwinter'
 alias draugr='ssh draugr'
 alias methuselah='ssh -t pheron@methuselah "/usr/local/bin/zsh;"'
 alias work-clone="git -c core.sshCommand='ssh -i ~/.ssh/id_rsa.tyler-github -o IdentitiesOnly=yes' clone"
-alias home-clone="git -c core.sshCommand='ssh -i ~/.ssh/id_rsa.celticlich-github -o IdentitiesOnly=yes' clone"
+#alias home-clone="git -c core.sshCommand='ssh -i ~/.ssh/id_rsa.celticlich-github -o IdentitiesOnly=yes' clone"
+alias clone-dfles="git -c core.sshCommand='ssh -i ~/.ssh/id_rsa.celticlich-github -o IdentitiesOnly=yes' clone git@github.com:celticlich/dfiles"
+alias clone-workfiles="git -c core.sshCommand='ssh -i ~/.ssh/id_rsa.celticlich-github -o IdentitiesOnly=yes' clone git@github.com:celticlich/workfiles"
+
