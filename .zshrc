@@ -22,7 +22,7 @@ print -Pn "\e]2;%~ :  $1\a"
 fi
 }
 # export BROWSER='/usr/local/bin/w3m'
-export BROWSER='/Applications/Firefox.app'
+# export BROWSER='/Applications/Firefox.app'
 export NODE_OPTIONS="--no-deprecation"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -80,16 +80,15 @@ export FZF_TMUX_OPTS='-p 65%'
 # Source
 # ##################################################################
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-[ -f $HOME/.zsh_aliases ] && source $HOME/.zsh_aliases
-[ -f $HOME/.zsh_functions ] && source $HOME/.zsh_functions
-[ -f $HOME/.git_functions ] && source $HOME/.git_functions
+[ -f $HOME/git/dfiles/.zsh_aliases ] && source $HOME/git/dfiles/.zsh_aliases
+[ -f $HOME/git/dfiles/.zsh_functions ] && source $HOME/git/dfiles/.zsh_functions
 [ -f $HOME/.mymacros.bash ] && source $HOME/.mymacros.bash
 [ -f $HOME/git/forgit/forgit.plugin.zsh ] && source $HOME/git/forgit/forgit.plugin.zsh
 [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-if [[ -f "/opt/homebrew/bin/zoxide" ]]; then
+if [[ -f "/usr/bin/zoxide" ]]; then
     eval "$(zoxide init zsh)"
     # echo "zoxide loaded"
   else
@@ -100,6 +99,5 @@ fi
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 export BW_SESSION=""
-source <(cleed completion zsh)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
